@@ -15,8 +15,17 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 //Postgresql
-//#include <pqxx/pqxx>
+#include <pqxx/pqxx>
 
+
+void initLoggers() {
+    //Stdcout logger
+    auto consoleLogger = spdlog::stdout_color_mt("console");
+    spdlog::get("console") -> info("Logger \"{0}\" init successfully", "console");
+    
+    //File logger
+    //TODO: add file logger
+}
 
 struct APIParams {
     const char* host;
