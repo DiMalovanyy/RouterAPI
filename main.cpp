@@ -14,17 +14,8 @@
 //Logger
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-
-
-void initLoggers() {
-    //Stdcout logger
-    auto consoleLogger = spdlog::stdout_color_mt("console");
-    spdlog::get("console") -> info("Logger \"{0}\" init successfully", "console");
-    
-    //File logger
-    //TODO: add file logger
-}
-
+//Postgresql
+//#include <pqxx/pqxx>
 
 
 struct APIParams {
@@ -41,15 +32,15 @@ APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
         exit(EXIT_FAILURE);
     }
     spdlog::get("console") -> info("Toml config was parsed successfully from the path \"{0}\"", confiPath);
-    
+
     APIParams params;
     params.port = table["port"].value_or("1433");
     params.host = table["host"].value_or("localohost");
-    
+
     if ( logParams ) {
         spdlog::get("console") -> info("RestApi address: {0}:{1}", params.host, params.port);
     }
-    
+
     return params;
 }
 
@@ -57,6 +48,6 @@ APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
 int main(int argc, char ** argv) {
     initLoggers();
     auto params = parseTomlConfig("./apiConfig.toml", true);
-    
+
 	return 0;
 }
