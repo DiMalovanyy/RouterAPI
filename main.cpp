@@ -32,7 +32,7 @@ struct APIParams {
     const char* port;
 };
 
-void parseTomlConfig( const char* confiPath, bool logParams = false) {
+APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
     toml::table table;
     try {
         table = toml::parse_file( confiPath );
@@ -41,22 +41,22 @@ void parseTomlConfig( const char* confiPath, bool logParams = false) {
         exit(EXIT_FAILURE);
     }
     spdlog::get("console") -> info("Toml config was parsed successfully from the path \"{0}\"", confiPath);
+    
+    APIParams params;
+    params.port = table["port"].value_or("1433");
+    params.host = table["host"].value_or("localohost");
+    
     if ( logParams ) {
-        spdlog::get("console") -> info("Toml parsed parms");
-        for (int i = 0; i < table.size(); ++i) {
-            //TODO: params info
-//            spdlog::get("console") -> info("\t{0}: {1}", table.)
-        }
-        
+        spdlog::get("console") -> info("RestApi address: {0}:{1}", params.host, params.port);
     }
     
+    return params;
 }
-
 
 
 int main(int argc, char ** argv) {
     initLoggers();
-    parseTomlConfig("./apiConfig.toml");
+    auto params = parseTomlConfig("./apiConfig.toml", true);
     
 	return 0;
 }
