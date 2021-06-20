@@ -23,10 +23,20 @@ include_directories(
 
 set(SOURCES 
 	main.cpp
-	server/restapi.cpp
+	server/server.cpp
+	server/acceptor.cpp
+	server/httpSession.cpp
+	server/webSocketSession.cpp
+	server/serverUtility.cpp
+	server/requestProcessor.cpp
 	)
 set(HEADERS 
-	server/restapi.h
+	server/server.h
+	server/acceptor.h
+	server/httpSession.h
+	server/webSocketSession.h
+	server/serverUtility.h
+	server/requestProcessor.h
 	)
 
 #copy toml config file to directory where binary file exec from

@@ -18,6 +18,11 @@
 #include <pqxx/pqxx>
 
 
+
+//Server
+#include "server/server.h"
+
+
 void initLoggers() {
     //Stdcout logger
     auto consoleLogger = spdlog::stdout_color_mt("console");
@@ -44,7 +49,7 @@ APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
 
     APIParams params;
     params.port = table["port"].value_or("1433");
-    params.host = table["host"].value_or("localohost");
+    params.host = table["host"].value_or("127.0.0.1");
 
     if ( logParams ) {
         spdlog::get("console") -> info("RestApi address: {0}:{1}", params.host, params.port);
@@ -57,6 +62,11 @@ APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
 int main(int argc, char ** argv) {
     initLoggers();
     auto params = parseTomlConfig("./apiConfig.toml", true);
+    
+    
+    Server httpServer(std::thread::hardware_concurrency());
+    httpServer.Run(atoi(params.port));
 
+    
 	return 0;
 }
