@@ -1,1 +1,2 @@
 port = "1488"
+database = "postgres://postgres:12345@localhost:5434/univerDB2?sslmode=disable"

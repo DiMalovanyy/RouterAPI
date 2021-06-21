@@ -35,6 +35,7 @@ void initLoggers() {
 struct APIParams {
     std::string host;
     std::string port;
+    std::string databaseConnectionURL;
 };
 
 APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
@@ -50,9 +51,11 @@ APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
     APIParams params;
     params.port = table["port"].value_or("1433");
     params.host = table["host"].value_or("127.0.0.1");
+    params.databaseConnectionURL =  table["database"].value_or("none");
 
     if ( logParams ) {
         spdlog::get("console") -> info("RestApi address: {0}:{1}", params.host, params.port);
+        spdlog::get("console") -> info("Database connection url: {}", params.databaseConnectionURL);
     }
 
     return params;

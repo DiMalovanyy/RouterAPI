@@ -1,9 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
+
+find_package(PostgreSQL REQUIRED)
+find_package(PQXX REQUIRED)
+if(NOT ${PQXX_FOUND})
+	message( "pqxx dows not found")
+endif()
+
 include_directories(${CMAKE_SOURCE_DIR}/../model)
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/postgres)
+
 set( HEADERS
 	repos.h
 	store.h
@@ -31,3 +40,7 @@ set_target_properties(StoreTest PROPERTIES
                 CXX_STANDARD 17
                 CXX_STANDARD_REQUIRED ON
 )
+target_include_directories(StoreTest PRIVATE ${PostgreSQL_INCLUDE_DIRS})
+target_link_libraries(StoreTest PRIVATE ${PostgreSQL_LIBRARIES})
+target_include_directories(StoreTest PRIVATE ${PQXX_INCLUDE_DIR})
+target_link_libraries(StoreTest PRIVATE ${PQXX_LIBRARIES})
