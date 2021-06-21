@@ -1,11 +1,13 @@
-#ifndef COUNTRY_H
-#define COUNTRY_H
+#ifndef USER_H
+#define USER_H
 
 #include "precompiled.h"
 
-struct Country {
+struct User {
+    
     size_t id;
     std::string name;
+    
     
 };
 

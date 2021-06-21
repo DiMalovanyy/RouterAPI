@@ -5,6 +5,8 @@ set(HEADERS
 	country.h
 	route.h
 	vehicle.h
+    user.h
+    precompiled.h
 	)
 
 set(SOURCES
@@ -12,6 +14,8 @@ set(SOURCES
 	country.cpp
 	route.cpp
 	vehicle.cpp
+    user.cpp
 	)
 
 add_executable(TestModel ${SOURCES} ${HEADERS} main.cpp)
+target_precompile_headers(TestModel PUBLIC precompiled.h)
