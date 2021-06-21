@@ -49,7 +49,9 @@ add_executable(${BINARY} ${SOURCES} ${HEADERS})
 target_link_libraries(${BINARY} pqxx)
 target_link_libraries(${BINARY} ${Boost_LIBRARIES})
 
-
+if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+	target_link_libraries(${BINARY} pthread)
+endif() 
 
 set_target_properties(${BINARY} PROPERTIES
 			CXX_STANDARD 17
