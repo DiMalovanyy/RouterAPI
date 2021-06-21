@@ -5,4 +5,5 @@ model/build/
 model/XcodeBuild/
 store/build/
 store/XcodeBuild/
+.DS_Store
 
