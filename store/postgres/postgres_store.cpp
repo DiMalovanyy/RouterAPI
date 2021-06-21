@@ -1,8 +1,14 @@
 
 #include "postgres_store.h"
 
-PostgresStore::PostgresStore() {
+#include <exception>
+
+
+
+PostgresStore::PostgresStore(const std::string& databaseConnectionURL) {
     //Constructor for db instance
+    pqxx::connection connection(databaseConnectionURL);
+    _databaseInstance = std::make_unique<pqxx::work>(connection);
 }
 
 std::unique_ptr<CityRepo> & PostgresStore::City() {
@@ -10,7 +16,7 @@ std::unique_ptr<CityRepo> & PostgresStore::City() {
         return _cityRepo;
     }
     
-    _cityRepo = std::make_unique<PostgresCityRepo>();
+    _cityRepo = std::make_unique<PostgresCityRepo>(_databaseInstance);
     return _cityRepo;
 }
 
@@ -19,7 +25,7 @@ std::unique_ptr<CountryRepo>& PostgresStore::Country() {
         return _countryRepo;
     }
     
-    _countryRepo = std::make_unique<PostgresCountryRepo>();
+    _countryRepo = std::make_unique<PostgresCountryRepo>(_databaseInstance);
     return _countryRepo;
 }
 
@@ -28,7 +34,7 @@ std::unique_ptr<UserRepo> & PostgresStore::User()  {
         return _userRepo;
     }
     
-    _userRepo = std::make_unique<PostgresUserRepo>();
+    _userRepo = std::make_unique<PostgresUserRepo>(_databaseInstance);
     return _userRepo;
 }
 
@@ -37,7 +43,7 @@ std::unique_ptr<VehicleRepo> & PostgresStore::Vehicle() {
         return _vehicleRepo;
     }
     
-    _vehicleRepo = std::make_unique<PostgresVehicleRepo>();
+    _vehicleRepo = std::make_unique<PostgresVehicleRepo>(_databaseInstance);
     return _vehicleRepo;
 }
 
@@ -46,6 +52,6 @@ std::unique_ptr<RouteRepo>& PostgresStore::Route() {
         return _routeRepo;
     }
     
-    _routeRepo = std::make_unique<PostgresRouteRepo>();
+    _routeRepo = std::make_unique<PostgresRouteRepo>(_databaseInstance);
     return _routeRepo;
 }

@@ -3,6 +3,7 @@
 
 
 #include <memory>
+#include <pqxx/pqxx>
 
 #include "store.h"
 
@@ -15,7 +16,7 @@
 class PostgresStore final: public Store {
 public:
     
-    PostgresStore();
+    PostgresStore(const std::string& databaseConnectionURL);
     
     std::unique_ptr<CityRepo>& City()override ;
     std::unique_ptr<CountryRepo>& Country() override;
@@ -26,6 +27,8 @@ public:
     
 private:
     //PostgresDB instance
+    std::unique_ptr<pqxx::work> _databaseInstance;
+    
     
     std::unique_ptr<CityRepo> _cityRepo;
     std::unique_ptr<UserRepo> _userRepo;
