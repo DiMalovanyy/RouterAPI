@@ -1,3 +1,5 @@
 build/
 XcodeBuild/
 .vscode/
+model/build/
+store/build/

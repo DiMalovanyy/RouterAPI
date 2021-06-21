@@ -21,15 +21,13 @@ protected:
 
 class SayHelloHandler: public HttpHandler {
 public:
-    
     SayHelloHandler() : HttpHandler() {}
     
     void Process(boost::beast::http::response<boost::beast::http::string_body>& responseWriter, const const boost::beast::http::request<boost::beast::http::string_body>& request) override {
-        
-        
         responseWriter.body().append("Hello world!");
         responseWriter.result(200);
     }
 };
+
 
 #endif
