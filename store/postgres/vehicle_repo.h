@@ -1,0 +1,4 @@
+#ifndef POSTGRES_VEHICLE_REPO_H
+#define POSTGRES_VEHICLE_REPO_H
+
+#endif
