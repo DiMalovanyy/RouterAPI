@@ -15,19 +15,17 @@
 class PostgresStore final: public Store {
 public:
     
-    PostgresStore() {
-        //Constructor for db instance
-    }
+    PostgresStore();
     
-    
-    
-    
-    
+    std::unique_ptr<CityRepo>& City()override ;
+    std::unique_ptr<CountryRepo>& Country() override;
+    std::unique_ptr<UserRepo> & User()  override;
+    std::unique_ptr<VehicleRepo> & Vehicle()  override;
+    std::unique_ptr<RouteRepo>& Route() override;
+
     
 private:
-    
     //PostgresDB instance
-    
     
     std::unique_ptr<CityRepo> _cityRepo;
     std::unique_ptr<UserRepo> _userRepo;

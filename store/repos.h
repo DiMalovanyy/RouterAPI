@@ -1,8 +1,6 @@
 #ifndef REPOS_H
 #define REPOS_H
 
-#include <memory>
-
 
 #include "city.h"
 #include "country.h"
@@ -12,28 +10,37 @@
 
 class CityRepo {
 public:
-    virtual std::unique_ptr<City>& cityById(size_t) const = 0;
+    virtual City cityById(size_t) const = 0;
+    
+    virtual ~CityRepo() {}
 };
 
 class CountryRepo {
 public:
-    virtual std::unique_ptr<Country>& countryById(size_t) const = 0;
+    virtual Country countryById(size_t) const = 0;
+    
+    virtual ~CountryRepo() {}
 };
 
 class UserRepo {
 public:
-    virtual std::unique_ptr<User>& userById(size_t) const = 0;
+    virtual User userById(size_t) const = 0;
+    
+    virtual ~UserRepo() {}
 };
 
 class VehicleRepo {
 public:
-    virtual std::unique_ptr<Vehicle>& vehicleById(size_t) const = 0;
+    virtual Vehicle vehicleById(size_t) const = 0;
+    
+    virtual ~VehicleRepo() {}
 };
 
 class RouteRepo {
 public:
-    virtual std::unique_ptr<Route>& routeById(size_t) const = 0;
+    virtual Route routeById(size_t) const = 0;
     
+    virtual ~RouteRepo() {}
 };
 
 
