@@ -5,8 +5,8 @@
 
 
 
-Acceptor::Acceptor(boost::asio::io_context& ioc, const size_t port_num)
-: _ioc(ioc), _acceptor(boost::asio::make_strand(ioc)) {
+Acceptor::Acceptor(boost::asio::io_context& ioc, const size_t port_num, const std::unique_ptr<HttpRouter>& router)
+: _ioc(ioc), _acceptor(boost::asio::make_strand(ioc)), _router(router) {
     boost::beast::error_code error_code;
     boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::address_v4::any(), port_num);
     
@@ -51,7 +51,7 @@ void Acceptor::onAccept(boost::beast::error_code error_code, boost::asio::ip::tc
         spdlog::get("console") -> info("Acceptor accept new connection");
         // Create the http session and run it
         std::make_shared<HttpSession>(
-            std::move(socket))->Run();
+            std::move(socket), _router)->Run();
     }
     // Accept another connection
     doAccept();

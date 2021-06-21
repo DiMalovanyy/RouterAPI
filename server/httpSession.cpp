@@ -3,8 +3,8 @@
 
 
 
-HttpSession::HttpSession(boost::asio::ip::tcp::socket&& socket)
-    : _socketStream(std::move(socket)), _queue(Queue(*this)) {}
+HttpSession::HttpSession(boost::asio::ip::tcp::socket&& socket, const std::unique_ptr<HttpRouter>& router)
+    : _socketStream(std::move(socket)), _queue(Queue(*this)), _router(router) {}
 
 void HttpSession::Run() {
     doRead();
@@ -37,7 +37,7 @@ void HttpSession::onRead(boost::beast::error_code error_code, [[maybe_unused]] s
     }
     
     //Send the response
-    handleRequest(std::move(_parser->release()), _queue);
+    handleRequest(std::move(_parser->release()), _queue, _router);
     
     // If we aren't at the queue limit, try to pipeline another request
     if(! _queue.isFull()) {

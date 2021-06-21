@@ -15,7 +15,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 //Postgresql
-#include <pqxx/pqxx>
+// #include <pqxx/pqxx>
 
 
 
@@ -33,8 +33,8 @@ void initLoggers() {
 }
 
 struct APIParams {
-    const char* host;
-    const char* port;
+    std::string host;
+    std::string port;
 };
 
 APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
@@ -65,7 +65,9 @@ int main(int argc, char ** argv) {
     
     
     Server httpServer(std::thread::hardware_concurrency());
-    httpServer.Run(atoi(params.port));
+    int port = atoi(params.port.data());
+    std::cout << "Port: " << port << std::endl;
+    httpServer.Run(atoi(params.port.data()));
 
     
 	return 0;

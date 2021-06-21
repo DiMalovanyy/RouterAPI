@@ -2,14 +2,10 @@
 #define HTTP_SESSION_H
 
 
-#include <utility>
-#include <memory>
 #include <optional>
 #include <deque>
 
-#include <boost/asio.hpp>
-#include <boost/beast.hpp>
-
+#include "precompiled.h"
 
 #include "serverUtility.h"
 #include "webSocketSession.h"
@@ -18,7 +14,7 @@
 class HttpSession: public std::enable_shared_from_this<HttpSession> {
 public:
     //Take ownership of the socket
-    HttpSession(boost::asio::ip::tcp::socket&& socket);
+    HttpSession(boost::asio::ip::tcp::socket&& socket, const std::unique_ptr<HttpRouter>& router);
     void Run();
     
 private:
@@ -65,6 +61,8 @@ private:
     Queue _queue;
     
     std::optional<boost::beast::http::request_parser<boost::beast::http::string_body>> _parser;
+    
+    const std::unique_ptr<HttpRouter>& _router;
     
 };
 

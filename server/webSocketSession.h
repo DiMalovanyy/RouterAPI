@@ -2,13 +2,7 @@
 #ifndef WEB_SOCKET_SESSION_H
 #define WEB_SOCKET_SESSION_H
 
-#include <utility>
-#include <memory>
-
-
-
-#include <boost/asio.hpp>
-#include <boost/beast.hpp>
+#include "precompiled.h"
 
 #include "serverUtility.h"
 

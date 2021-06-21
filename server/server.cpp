@@ -3,11 +3,13 @@
 Server::Server(const short thread_pool_size) : _ioc(thread_pool_size), _thread_pool_size(thread_pool_size) {
     assert(thread_pool_size > 0);
     _thread_pool.reserve(thread_pool_size - 1);
+    
+    ConfigureRouter();
 }
 
 
 void Server::Run(const short port_num) {
-    _acceptor.reset(new Acceptor(_ioc, port_num));
+    _acceptor.reset(new Acceptor(_ioc, port_num, _router));
     _acceptor -> Run();
     
     
@@ -31,5 +33,14 @@ void Server::Run(const short port_num) {
     for (const auto& thread : _thread_pool) {
         thread -> join();
     }
+    
+}
+
+
+void Server::ConfigureRouter() {
+    
+    _router = std::make_unique<HttpRouter>();
+    //Debug only
+    _router -> AddHandler("/hello/", std::make_unique<SayHelloHandler>());
     
 }
