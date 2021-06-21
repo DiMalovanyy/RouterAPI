@@ -3,7 +3,7 @@
 
 #include "precompiled.h"
 
-class Vehicle {
+struct Vehicle {
     size_t id;
     std::string name;
     

@@ -3,7 +3,7 @@
 
 #include "precompiled.h"
 
-class Route {
+struct Route {
     size_t id;
     
     size_t citySourceId;

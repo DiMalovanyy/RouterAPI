@@ -27,6 +27,7 @@ public:
     
 private:
     //PostgresDB instance
+    pqxx::connection _connection;
     std::unique_ptr<pqxx::work> _databaseInstance;
     
     

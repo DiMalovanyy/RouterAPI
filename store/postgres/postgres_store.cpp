@@ -5,10 +5,9 @@
 
 
 
-PostgresStore::PostgresStore(const std::string& databaseConnectionURL) {
-    //Constructor for db instance
-    pqxx::connection connection(databaseConnectionURL);
-    _databaseInstance = std::make_unique<pqxx::work>(connection);
+PostgresStore::PostgresStore(const std::string& databaseConnectionURL): _connection(databaseConnectionURL), _databaseInstance(std::make_unique<pqxx::work>(_connection)) {
+
+    
 }
 
 std::unique_ptr<CityRepo> & PostgresStore::City() {
@@ -25,7 +24,10 @@ std::unique_ptr<CountryRepo>& PostgresStore::Country() {
         return _countryRepo;
     }
     
+    std::cout << "Instanced successfully" << std::endl;
+    
     _countryRepo = std::make_unique<PostgresCountryRepo>(_databaseInstance);
+    std::cout << "Created successfully" << std::endl;
     return _countryRepo;
 }
 
@@ -35,6 +37,8 @@ std::unique_ptr<UserRepo> & PostgresStore::User()  {
     }
     
     _userRepo = std::make_unique<PostgresUserRepo>(_databaseInstance);
+
+    
     return _userRepo;
 }
 

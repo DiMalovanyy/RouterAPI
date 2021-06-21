@@ -16,6 +16,7 @@ include_directories(${CMAKE_SOURCE_DIR}/postgres)
 set( HEADERS
 	repos.h
 	store.h
+	errors.h
     postgres/postgres_store.h
     postgres/user_repo.h
     postgres/vehicle_repo.h
@@ -27,6 +28,7 @@ set( HEADERS
 set( SOURCES
 	repos.cpp
 	store.cpp
+	errors.cpp
     postgres/postgres_store.cpp
     postgres/user_repo.cpp
     postgres/vehicle_repo.cpp
