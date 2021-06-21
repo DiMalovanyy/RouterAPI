@@ -60,3 +60,4 @@ set_target_properties(${BINARY} PROPERTIES
 target_include_directories(${BINARY} PRIVATE ${CMAKE_SOURCE_DIR}/libs/tomlplusplus/include)
 target_include_directories(${BINARY} PRIVATE ${CMAKE_SOURCE_DIR}/libs/spdlog/include)
 target_include_directories(${BINARY} PRIVATE ${CMAKE_SOURCE_DIR}/libs/libpqxx/include)
+target_include_directories(${BINARY} PRIVATE ${CMAKE_SOURCE_DIR}/libs/rapidjson)

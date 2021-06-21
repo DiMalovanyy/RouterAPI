@@ -7,3 +7,6 @@
 [submodule "libs/libpqxx"]
 	path = libs/libpqxx
 	url = https://github.com/jtv/libpqxx.git
+[submodule "libs/rapidjson"]
+	path = libs/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
