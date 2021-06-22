@@ -13,7 +13,7 @@ void HttpSession::Run() {
 void HttpSession::doRead() {
     _parser.emplace();  //Construct new parser for each message
     _parser->body_limit(10000);  // Apply a reasonable limit to the allowed size of the body in bytes to prevent abuse.
-    _socketStream.expires_after(std::chrono::seconds(30));  //Set the timeouts
+//    _socketStream.expires_after(std::chrono::seconds(30));  //Set the timeouts
     
     // Read a request using the parser-oriented interface
     boost::beast::http::async_read( _socketStream, _dynamicBuffer, *_parser,

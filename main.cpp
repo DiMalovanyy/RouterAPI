@@ -1,114 +1,71 @@
-//
-//#include <iostream>
-//
-////C libs
-//#include <stdio.h>
-//#include <stdlib.h>
-//
-//
-//
-////Other libs
-//
-////Toml
-//#include <toml++/toml.h>
-////Logger
-//#include <spdlog/spdlog.h>
-//#include <spdlog/sinks/stdout_color_sinks.h>
-////Postgresql
-//// #include <pqxx/pqxx>
-//
-//
-//
-////Server
-//#include "server/server.h"
-//
-//
-//void initLoggers() {
-//    //Stdcout logger
-//    auto consoleLogger = spdlog::stdout_color_mt("console");
-//    spdlog::get("console") -> info("Logger \"{0}\" init successfully", "console");
-//
-//    //File logger
-//    //TODO: add file logger
-//}
-//
-//struct APIParams {
-//    std::string host;
-//    std::string port;
-//    std::string databaseConnectionURL;
-//};
-//
-//APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
-//    toml::table table;
-//    try {
-//        table = toml::parse_file( confiPath );
-//    } catch (const toml::parse_error& err) {
-//        std::cerr << "Some errors while parsing toml occured" << std::endl;
-//        exit(EXIT_FAILURE);
-//    }
-//    spdlog::get("console") -> info("Toml config was parsed successfully from the path \"{0}\"", confiPath);
-//
-//    APIParams params;
-//    params.port = table["port"].value_or("1433");
-//    params.host = table["host"].value_or("127.0.0.1");
-//    params.databaseConnectionURL =  table["database"].value_or("none");
-//
-//    if ( logParams ) {
-//        spdlog::get("console") -> info("RestApi address: {0}:{1}", params.host, params.port);
-//        spdlog::get("console") -> info("Database connection url: {}", params.databaseConnectionURL);
-//    }
-//
-//    return params;
-//}
-//
-//
-//int main(int argc, char ** argv) {
-//    initLoggers();
-//    auto params = parseTomlConfig("./apiConfig.toml", true);
-//
-//
-//    Server httpServer(std::thread::hardware_concurrency());
-//    int port = atoi(params.port.data());
-//    std::cout << "Port: " << port << std::endl;
-//    httpServer.Run(atoi(params.port.data()));
-//
-//
-//	return 0;
-//}
 
+#include <iostream>
 
+//C libs
 #include <stdio.h>
+#include <stdlib.h>
 
-#include <store/postgres/postgres_store.h>
 
-int main(int argc, char ** argv) {
-    //Tests
-    
-//    pqxx::connection c{"postgres://postgres:12345@localhost:5434/univerDB2?sslmode=disable"};
-//    pqxx::work txn{c};
-//
-//    pqxx::result r{txn.exec("SELECT id, name FROM users")};
-//    for (auto row: r) {
-//        std::cout << "Id: " << row["id"].as<size_t>() << std::endl;
-//        std::cout << "Name: " << row["name"].c_str() << std::endl << std::endl;
-//    }
-    
-    
-    PostgresStore store("postgres://postgres:12345@localhost:5434/univerDB2?sslmode=disable");
 
+//Other libs
+
+//Toml
+#include <toml++/toml.h>
+//Logger
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+//Postgresql
+// #include <pqxx/pqxx>
+
+
+
+//Server
+#include "server/server.h"
+#include "server/serverUtility.h"
+
+
+void initLoggers() {
+    //Stdcout logger
+    auto consoleLogger = spdlog::stdout_color_mt("console");
+    spdlog::get("console") -> info("Logger \"{0}\" init successfully", "console");
+
+    //File logger
+    //TODO: add file logger
+}
+
+APIParams parseTomlConfig( const char* confiPath, bool logParams = false) {
+    toml::table table;
     try {
-        Country c = store.Country()-> countryById(0);
-        User u = store.User() -> userById(0);
-        
-        std::cout << "Id: " << c.id << std::endl;
-        std::cout << "Name: " << c.name << std::endl;
-    } catch (StoreException& e) {
-        std::cout << "Error description: " << e.what() << std::endl;
-    } catch (std::exception& e) {
-        std::cout << "Undefined exception: " << e.what() << std::endl;
+        table = toml::parse_file( confiPath );
+    } catch (const toml::parse_error& err) {
+        std::cerr << "Some errors while parsing toml occured" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    spdlog::get("console") -> info("Toml config was parsed successfully from the path \"{0}\"", confiPath);
+
+    APIParams params;
+    params.port = table["port"].value_or("1433");
+    params.host = table["host"].value_or("127.0.0.1");
+    params.databaseConnectionURL =  table["database"].value_or("none");
+    params.threadPoolSize = std::thread::hardware_concurrency();
+
+    if ( logParams ) {
+        spdlog::get("console") -> info("RestApi address: {0}:{1}", params.host, params.port);
+        spdlog::get("console") -> info("Database connection url: {}", params.databaseConnectionURL);
     }
 
-    
-    
-    return 0;
+    return params;
+}
+
+
+int main(int argc, char ** argv) {
+    initLoggers();
+    auto params = parseTomlConfig("./apiConfig.toml", true);
+
+
+    Server httpServer(params);
+    httpServer.Run();
+
+
+	return 0;
 }

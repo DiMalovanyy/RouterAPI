@@ -1,14 +1,16 @@
 #include <server.h>
 
-Server::Server(const short thread_pool_size) : _ioc(thread_pool_size), _thread_pool_size(thread_pool_size) {
-    assert(thread_pool_size > 0);
-    _thread_pool.reserve(thread_pool_size - 1);
+Server::Server(const APIParams& params) : _params(params), _ioc(params.threadPoolSize){
+    assert(params.threadPoolSize > 0);
+    _thread_pool.reserve(params.threadPoolSize - 1);
     
     ConfigureRouter();
+    ConfigureDataBase();
 }
 
 
-void Server::Run(const short port_num) {
+void Server::Run() {
+    short port_num = atoi(_params.port.data());
     _acceptor.reset(new Acceptor(_ioc, port_num, _router));
     _acceptor -> Run();
     
@@ -20,7 +22,7 @@ void Server::Run(const short port_num) {
             _ioc.stop();
         });
     
-    for (short thread_index = _thread_pool_size - 1; thread_index > 0; --thread_index) {
+    for (short thread_index = _params.threadPoolSize - 1; thread_index > 0; --thread_index) {
         _thread_pool.emplace_back(new std::thread([_ioc = &_ioc](){
             _ioc -> run();
         }));
@@ -36,11 +38,17 @@ void Server::Run(const short port_num) {
     
 }
 
+void Server::ConfigureDataBase() {
+    
+}
+
 
 void Server::ConfigureRouter() {
     
     _router = std::make_unique<HttpRouter>();
     //Debug only
     _router -> AddHandler("/hello/", std::make_unique<SayHelloHandler>());
+    _router -> AddHandler("/user/{}", std::make_unique<GetUserByIdHandler>());
+    _router -> AddHandler("/user", std::make_unique<GetAllUsers>());
     
 }

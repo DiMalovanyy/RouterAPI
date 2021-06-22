@@ -2,8 +2,13 @@
 #define ROUTER_H
 
 #include <iostream>
+#include <vector>
 #include <type_traits>
 #include <unordered_map>
+#include <optional>
+
+//For split
+#include <boost/algorithm/string.hpp>
 
 #include "precompiled.h"
 
@@ -14,18 +19,18 @@
 class HttpRouter {
 public:
     
-    explicit HttpRouter() = default;
-    
-    
-    void AddHandler(const std::string& endpoint, std::unique_ptr<HttpHandler> handler) {
-        _router.insert(std::make_pair(endpoint, std::move(handler)));
+    explicit HttpRouter() {
+        
     }
     
     
-    // template <typename Fields, typename Body >
-    // boost::beast::http::response<Fields, Body> getResponse() {
-        
-    // }
+    void AddHandler(const std::string& endpoint, std::unique_ptr<HttpHandler> handler) {
+//        std::vector<std::string> splitedEndpoint;
+//        boost::split(splitedEndpoint, endpoint, boost::is_any_of("/"));
+//        _router[endpoint] = handler;
+    
+        _router.insert(std::make_pair(endpoint, std::move(handler)));
+    }
 
     boost::beast::http::response<boost::beast::http::string_body> getResponse( 
         const boost::beast::http::request<boost::beast::http::string_body>& request
@@ -36,13 +41,15 @@ public:
         response.set(boost::beast::http::field::server, "Beast Http server");
         //Get endpoint and method from request
         std::string endpoint = std::string(request.target().data());
-        std::cout << "Endpoint: " << endpoint << std::endl;
-        //Match with router. if does not found return back 404
-        if (_router.find(endpoint) == _router.end()) {
+        
+        
+        auto findString = mathcedEndpoint(std::string(request.target().data()));
+        if (!findString) {
             response.result(boost::beast::http::status::not_found);
         } else {
-            _router.at(endpoint) -> Process(response, request);
+            _router.at(findString -> first) -> Process(response, request, findString -> second);
         }
+        
         
         response.prepare_payload();
         return response;
@@ -51,6 +58,41 @@ public:
     
     
 private:
+    
+    std::optional<std::pair<std::string, std::string>> mathcedEndpoint(const std::string& endpoint) const {
+//        std::cout << "Input endpoint: " << endpoint << std::endl;
+        
+        if (_router.find(endpoint) != _router.end()) {
+            return std::make_pair(endpoint, "");
+        }
+        std::string catedEndpoint = std::string(endpoint.begin(), endpoint.end() - 1);
+        if (_router.find(endpoint + "/") != _router.end()) {
+            return std::make_pair(endpoint + "/", "");
+        }
+        
+        if (_router.find(std::string(endpoint.begin(), endpoint.end() - 1)) != _router.end() ) {
+            return std::make_pair(std::string(endpoint.begin(), endpoint.end() - 1), "");
+        }
+        
+        std::vector<std::string> splitedEndpoint;
+        boost::split(splitedEndpoint, endpoint, boost::is_any_of("/"));
+        
+        std::string lastParam = splitedEndpoint[splitedEndpoint.size() - 1];
+//        std::cout << "last param: " << lastParam << std::endl;
+        splitedEndpoint.pop_back();
+        
+        std::string findString = boost::algorithm::join(splitedEndpoint, "/") + "/{}";
+        
+//        std::cout << "String: " << findString << std::endl;
+        
+        if (_router.find(findString) != _router.end()) {
+            return std::make_pair(findString, lastParam);
+        }
+        
+        
+        return std::nullopt;
+    }
+    
     std::unordered_map<std::string, std::unique_ptr<HttpHandler>> _router;
 };
 

@@ -1,6 +1,9 @@
 #ifndef REPOS_H
 #define REPOS_H
 
+#include <vector>
+#include <string>
+
 
 #include "city.h"
 #include "country.h"
@@ -25,6 +28,8 @@ public:
 class UserRepo {
 public:
     virtual User userById(size_t) const = 0;
+    virtual std::vector<User> getAllUsers() const = 0;
+    virtual void addUser(const User& ) const = 0;
     
     virtual ~UserRepo() {}
 };

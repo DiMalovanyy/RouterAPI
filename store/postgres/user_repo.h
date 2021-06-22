@@ -38,6 +38,45 @@ public:
         return user;
     }
     
+    std::vector<User> getAllUsers() const override {
+        std::vector<User> users;
+        try {
+            pqxx::result result(_dbInstance -> exec("Select id, name FROM users"));
+            
+            for (auto row: result) {
+                users.emplace_back(row["id"].as<size_t>(), row["name"].c_str());
+            }
+            
+        } catch (pqxx::sql_error& e) {
+            std::cerr << "SQL error: " << e.what() << std::endl;
+            std::cerr << "Query was: " << e.query() << std::endl;
+            std::rethrow_exception(std::current_exception());
+        } catch (...) {
+            std::rethrow_exception(std::current_exception());
+        }
+        return users;
+    }
+    
+    void addUser(const User& user) const override {
+        
+        try {
+            
+            
+            
+            
+        } catch (pqxx:sql_error& e) {
+            
+            
+        } catch (pqxx::sql_error& e) {
+            std::cerr << "SQL error: " << e.what() << std::endl;
+            std::cerr << "Query was: " << e.query() << std::endl;
+            std::rethrow_exception(std::current_exception());
+        } catch (...) {
+            std::rethrow_exception(std::current_exception());
+        }
+        
+    }
+    
 private:
     std::unique_ptr<pqxx::work>& _dbInstance;
     
