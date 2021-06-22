@@ -9,9 +9,10 @@ if(NOT ${PQXX_FOUND})
 	message( "pqxx dows not found")
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/../model)
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/postgres)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../model)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/postgres)
+
 
 set( HEADERS
 	repos.h
@@ -37,12 +38,20 @@ set( SOURCES
     postgres/route_repo.cpp
 	)
 
-add_executable(StoreTest ${SOURCES} ${HEADERS} main.cpp)
-set_target_properties(StoreTest PROPERTIES
+set(BINARY Store)
+
+#add_executable(StoreTest ${SOURCES} ${HEADERS} main.cpp)
+add_library(${BINARY} STATIC ${SOURCES} ${HEADERS})
+set_target_properties(${BINARY} PROPERTIES
                 CXX_STANDARD 17
                 CXX_STANDARD_REQUIRED ON
 )
-target_include_directories(StoreTest PRIVATE ${PostgreSQL_INCLUDE_DIRS})
-target_link_libraries(StoreTest PRIVATE ${PostgreSQL_LIBRARIES})
-target_include_directories(StoreTest PRIVATE ${PQXX_INCLUDE_DIR})
-target_link_libraries(StoreTest PRIVATE ${PQXX_LIBRARIES})
+
+SET(CMAKE_C_ARCHIVE_FINISH   "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -no_warning_for_no_symbols -c ${CMAKE_CURRENT_BINARY_DIR}/lib${BINARY}.a")
+SET(CMAKE_CXX_ARCHIVE_FINISH "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -no_warning_for_no_symbols -c ${CMAKE_CURRENT_BINARY_DIR}/lib${BINARY}.a")
+
+
+target_include_directories(${BINARY} PRIVATE ${PostgreSQL_INCLUDE_DIRS})
+target_link_libraries(${BINARY} PRIVATE ${PostgreSQL_LIBRARIES})
+target_include_directories(${BINARY} PRIVATE ${PQXX_INCLUDE_DIR})
+target_link_libraries(${BINARY} PRIVATE ${PQXX_LIBRARIES})

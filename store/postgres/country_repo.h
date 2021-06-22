@@ -25,11 +25,8 @@ public:
             }
             
             for (auto row: result) {
-                std::cout << "Id: " << row["id"].as<size_t>() << std::endl;
-                std::cout << "Name: " << row["name"].c_str() << std::endl;
-                
-//                country.id = row["id"].as<size_t>();
-//                country.name = row["name"].c_str();
+                country.id = row["id"].as<size_t>();
+                country.name = row["name"].c_str();
             }
         } catch (pqxx::sql_error& e) {
             std::cerr << "SQL error: " << e.what() << std::endl;

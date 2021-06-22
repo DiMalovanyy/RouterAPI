@@ -20,10 +20,11 @@ int main(int argc, char ** argv) {
     PostgresStore store("postgres://postgres:12345@localhost:5434/univerDB2?sslmode=disable");
 
     try {
+        Country c = store.Country()-> countryById(0);
         User u = store.User() -> userById(0);
         
-        std::cout << "Id: " << u.id << std::endl;
-        std::cout << "Name: " << u.name << std::endl;
+        std::cout << "Id: " << c.id << std::endl;
+        std::cout << "Name: " << c.name << std::endl;
     } catch (StoreException& e) {
         std::cout << "Error description: " << e.what() << std::endl;
     } catch (std::exception& e) {

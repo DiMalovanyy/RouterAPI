@@ -22,11 +22,17 @@ endif()
 #	include_directories( ${PQXX_INCLUDE_DIRECTORIES} )
 #endif()
 
+#link store library
+add_subdirectory(${CMAKE_SOURCE_DIR}/store)
+
 include_directories(
 	${CMAKE_SOURCE_DIR}
 	${CMAKE_BINARY_DIR}
 	server
 	router
+    model
+    store
+    store/postgres
 	Utils
 	)
 
@@ -67,6 +73,7 @@ target_precompile_headers(${BINARY} PRIVATE precompiled.h)
 #	target_link_libraries(${BINARY} ${PQXX_LIBRARIES})
 #endif()
 
+target_link_libraries(${BINARY} Store)
 target_link_libraries(${BINARY} ${Boost_LIBRARIES})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
