@@ -44,7 +44,7 @@ public:
             pqxx::result result(_dbInstance -> exec("Select id, name FROM users"));
             
             for (auto row: result) {
-                users.emplace_back(row["id"].as<size_t>(), row["name"].c_str());
+                users.push_back(User{row["id"].as<size_t>(), row["name"].c_str()});
             }
             
         } catch (pqxx::sql_error& e) {
@@ -64,7 +64,7 @@ public:
             
             
             
-        } catch (pqxx:sql_error& e) {
+        } catch (pqxx::sql_error& e) {
             
             
         } catch (pqxx::sql_error& e) {
