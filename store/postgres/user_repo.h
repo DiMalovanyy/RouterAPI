@@ -57,13 +57,16 @@ public:
         return users;
     }
     
-    void addUser(const User& user) override {
+    int addUser(const std::string& name) override {
         
         try {
-            pqxx::result result(_dbInstance -> exec("INSERT INTO users (id, name) VALUES(" +
-                                                    _dbInstance -> quote(user.id), ", " +
-                                                    _dbInstance -> quote(user.name) +
+            pqxx::result result(_dbInstance -> exec("INSERT INTO users ( name ) VALUES(" +
+                                                    _dbInstance -> quote(name) +
                                                     ") RETURNING id"));
+            
+            for  (auto row : result) {
+                return row["id"].as<size_t>();
+            }
         } catch (pqxx::sql_error& e) {
             
             
