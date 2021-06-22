@@ -41,7 +41,7 @@ public:
     std::vector<User> getAllUsers() const override {
         std::vector<User> users;
         try {
-            pqxx::result result(_dbInstance -> exec("Select id, name FROM users"));
+            pqxx::result result(_dbInstance -> exec("SELECT id, name FROM users"));
             
             for (auto row: result) {
                 users.push_back(User{row["id"].as<size_t>(), row["name"].c_str()});
@@ -57,13 +57,13 @@ public:
         return users;
     }
     
-    void addUser(const User& user) const override {
+    void addUser(const User& user) override {
         
         try {
-            
-            
-            
-            
+            pqxx::result result(_dbInstance -> exec("INSERT INTO users (id, name) VALUES(" +
+                                                    _dbInstance -> quote(user.id), ", " +
+                                                    _dbInstance -> quote(user.name) +
+                                                    ") RETURNING id"));
         } catch (pqxx::sql_error& e) {
             
             

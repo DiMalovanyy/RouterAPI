@@ -39,16 +39,18 @@ void Server::Run() {
 }
 
 void Server::ConfigureDataBase() {
-    
+    _store = std::make_unique<PostgresStore>(_params.databaseConnectionURL);
+    spdlog::get("console") -> info("Database configured and connected...");
 }
 
 
 void Server::ConfigureRouter() {
     
-    _router = std::make_unique<HttpRouter>();
+    _router = std::make_unique<HttpRouter>(_store);
+    spdlog::get("console") -> info("Router configured...");
     //Debug only
-    _router -> AddHandler("/hello/", std::make_unique<SayHelloHandler>());
-    _router -> AddHandler("/user/{}", std::make_unique<GetUserByIdHandler>());
-    _router -> AddHandler("/user", std::make_unique<GetAllUsers>());
+    _router -> AddHandler("/hello/", std::make_unique<SayHelloHandler>(_store));
+    _router -> AddHandler("/user/{}", std::make_unique<GetUserByIdHandler>(_store));
+    _router -> AddHandler("/user", std::make_unique<GetAllUsers>(_store));
     
 }

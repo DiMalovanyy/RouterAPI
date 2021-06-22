@@ -13,22 +13,18 @@
 #include "precompiled.h"
 
 
-
 #include "handler.h"
+
+#include "store/store.h"
+#include "store/postgres/postgres_store.h"
 
 class HttpRouter {
 public:
     
-    explicit HttpRouter() {
-        
-    }
+    explicit HttpRouter(std::unique_ptr<Store>& store): _store(store) {}
     
     
     void AddHandler(const std::string& endpoint, std::unique_ptr<HttpHandler> handler) {
-//        std::vector<std::string> splitedEndpoint;
-//        boost::split(splitedEndpoint, endpoint, boost::is_any_of("/"));
-//        _router[endpoint] = handler;
-    
         _router.insert(std::make_pair(endpoint, std::move(handler)));
     }
 
@@ -94,6 +90,7 @@ private:
     }
     
     std::unordered_map<std::string, std::unique_ptr<HttpHandler>> _router;
+    std::unique_ptr<Store>& _store;
 };
 
 

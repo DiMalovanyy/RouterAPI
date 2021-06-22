@@ -12,7 +12,7 @@
 #include "router.h"
 #include "handler.h"
 
-#include "store/postgres/postgres_store.h"
+#include "store/store.h"
 #include "serverUtility.h"
 
 
@@ -31,7 +31,7 @@ private:
     
     APIParams _params;
     
-    std::unique_ptr<PostgresStore>;
+    std::unique_ptr<Store> _store;
     std::unique_ptr<HttpRouter> _router;
     
     boost::asio::io_context _ioc;
